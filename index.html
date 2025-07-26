@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParkSmart - Smart Parking Solutions</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#4F46E5">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.css" rel="stylesheet">
+</head>
+<body class="min-h-screen transition-colors duration-300 bg-gray-50">
+    <div class="flex">
+        <!-- Desktop Sidebar -->
+        <div class="hidden lg:flex lg:w-64 lg:flex-col lg:fixed lg:inset-y-0" id="desktop-sidebar">
+            <div class="flex flex-col flex-grow bg-white border-r border-gray-200">
+                <div class="flex items-center flex-shrink-0 px-4 py-6">
+                    <div class="flex items-center gap-3">
+                        <img src="logo-icon-only.png" alt="ParkSmart" class="w-8 h-8">
+                        <span class="text-lg font-semibold text-gray-800 dark:text-white">ParkSmart</span>
+                    </div>
+                </div>
+                <div class="flex-1 flex flex-col px-4 pb-4">
+                    <div class="space-y-2" id="desktop-nav">
+                        <button class="nav-btn w-full justify-start flex items-center px-3 py-2 rounded-lg transition-colors" data-tab="dashboard">
+                            <i data-lucide="home" class="h-4 w-4 mr-3"></i>
+                            Dashboard
+                        </button>
+                        <button class="nav-btn w-full justify-start flex items-center px-3 py-2 rounded-lg transition-colors" data-tab="map">
+                            <i data-lucide="map-pin" class="h-4 w-4 mr-3"></i>
+                            Find Parking
+                        </button>
+                        <button class="nav-btn w-full justify-start flex items-center px-3 py-2 rounded-lg transition-colors" data-tab="booking">
+                            <i data-lucide="calendar" class="h-4 w-4 mr-3"></i>
+                            Book Spot
+                        </button>
+                        <button class="nav-btn w-full justify-start flex items-center px-3 py-2 rounded-lg transition-colors" data-tab="profile">
+                            <i data-lucide="user" class="h-4 w-4 mr-3"></i>
+                            Profile
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 lg:pl-64">
+            <!-- Mobile Header -->
+            <div class="lg:hidden flex items-center justify-between p-4 bg-white border-b border-gray-200">
+                <div class="flex items-center gap-2">
+                    <img src="logo-icon-only.png" alt="ParkSmart" class="w-7 h-7">
+                    <span class="text-lg font-semibold text-gray-800 dark:text-white">ParkSmart</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button id="theme-toggle" class="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors">
+                        <i data-lucide="moon" class="h-5 w-5"></i>
+                    </button>
+                    <button id="mobile-menu-btn" class="p-2 rounded-lg hover:bg-gray-100 transition-colors">
+                        <i data-lucide="menu" class="h-5 w-5"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile Menu Overlay -->
+            <div id="mobile-menu-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden lg:hidden">
+                <div class="fixed left-0 top-0 h-full w-64 bg-white transform -translate-x-full transition-transform duration-300" id="mobile-menu">
+                    <div class="p-4">
+                        <div class="flex items-center justify-between mb-6">
+                            <h2 class="text-lg font-semibold">Menu</h2>
+                            <button id="mobile-menu-close" class="p-2 hover:bg-gray-100 rounded-lg">
+                                <i data-lucide="x" class="h-5 w-5"></i>
+                            </button>
+                        </div>
+                        <div class="space-y-2" id="mobile-nav">
+                            <button class="nav-btn w-full justify-start flex items-center px-3 py-2 rounded-lg transition-colors" data-tab="dashboard">
+                                <i data-lucide="home" class="h-4 w-4 mr-3"></i>
+                                Dashboard
+                            </button>
+                            <button class="nav-btn w-full justify-start flex items-center px-3 py-2 rounded-lg transition-colors" data-tab="map">
+                                <i data-lucide="map-pin" class="h-4 w-4 mr-3"></i>
+                                Find Parking
+                            </button>
+                            <button class="nav-btn w-full justify-start flex items-center px-3 py-2 rounded-lg transition-colors" data-tab="booking">
+                                <i data-lucide="calendar" class="h-4 w-4 mr-3"></i>
+                                Book Spot
+                            </button>
+                            <button class="nav-btn w-full justify-start flex items-center px-3 py-2 rounded-lg transition-colors" data-tab="profile">
+                                <i data-lucide="user" class="h-4 w-4 mr-3"></i>
+                                Profile
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Desktop Theme Toggle -->
+            <button id="desktop-theme-toggle" class="hidden lg:flex fixed top-4 right-4 z-50 p-2 rounded-lg bg-white/80 backdrop-blur-sm border border-gray-200 hover:bg-white transition-colors">
+                <i data-lucide="moon" class="h-5 w-5"></i>
+            </button>
+
+            <!-- Page Content -->
+            <div class="p-4 md:p-6 lg:p-8">
+                <!-- Dashboard View -->
+                <div id="dashboard-view" class="tab-content">
+                    <div class="space-y-6">
+                        <!-- Welcome Header -->
+                        <div class="card bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 text-white border-0">
+                            <div class="p-4 md:p-6">
+                                <div class="flex flex-col md:flex-row justify-between items-start mb-4 gap-4">
+                                    <div class="flex-1">
+                                        <h1 class="text-xl md:text-2xl lg:text-3xl font-bold mb-1">Welcome back, Rajesh!</h1>
+                                        <p class="text-blue-100 mb-1 text-sm md:text-base">Smart parking made simple</p>
+                                        <p class="text-blue-200 text-xs md:text-sm" id="current-time"></p>
+                                    </div>
+                                    <div class="flex gap-2 self-start md:self-center">
+                                        <button class="p-2 rounded-lg text-white hover:bg-white/20 transition-colors relative">
+                                            <i data-lucide="bell" class="h-4 w-4 md:h-5 md:w-5"></i>
+                                            <div class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+                                        </button>
+                                        <div class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-white/20 flex items-center justify-center text-white font-semibold">
+                                            RK
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-3 gap-2 md:gap-4">
+                                    <div class="text-center p-2 md:p-3 bg-white/10 rounded-lg backdrop-blur-sm">
+                                        <div class="text-lg md:text-xl font-bold">₹485</div>
+                                        <div class="text-xs text-blue-100">Total Saved</div>
+                                    </div>
+                                    <div class="text-center p-2 md:p-3 bg-white/10 rounded-lg backdrop-blur-sm">
+                                        <div class="text-lg md:text-xl font-bold">32</div>
+                                        <div class="text-xs text-blue-100">Bookings</div>
+                                    </div>
+                                    <div class="text-center p-2 md:p-3 bg-white/10 rounded-lg backdrop-blur-sm">
+                                        <div class="text-lg md:text-xl font-bold flex items-center justify-center gap-1">
+                                            4.9 <i data-lucide="star" class="h-3 w-3 fill-yellow-400 text-yellow-400"></i>
+                                        </div>
+                                        <div class="text-xs text-blue-100">Rating</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Quick Actions -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                            <div class="card cursor-pointer hover:shadow-lg transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-green-50 to-emerald-50 border-green-200" data-tab="map">
+                                <div class="p-4">
+                                    <div class="flex justify-between items-start mb-3">
+                                        <i data-lucide="map-pin" class="h-6 w-6 md:h-8 md:w-8 text-green-600"></i>
+                                        <span class="badge bg-green-500 text-white text-xs">Live</span>
+                                    </div>
+                                    <h3 class="font-semibold text-green-900 text-sm md:text-base">Find Nearby</h3>
+                                    <p class="text-xs md:text-sm text-green-700">Real-time availability</p>
+                                </div>
+                            </div>
+
+                            <div class="card cursor-pointer hover:shadow-lg transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200" data-tab="booking">
+                                <div class="p-4">
+                                    <div class="flex justify-between items-start mb-3">
+                                        <i data-lucide="calendar" class="h-6 w-6 md:h-8 md:w-8 text-blue-600"></i>
+                                        <span class="badge bg-blue-500 text-white text-xs">Smart</span>
+                                    </div>
+                                    <h3 class="font-semibold text-blue-900 text-sm md:text-base">Pre-Book</h3>
+                                    <p class="text-xs md:text-sm text-blue-700">Reserve in advance</p>
+                                </div>
+                            </div>
+
+                            <div class="card cursor-pointer hover:shadow-lg transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-purple-50 to-violet-50 border-purple-200">
+                                <div class="p-4">
+                                    <div class="flex justify-between items-start mb-3">
+                                        <i data-lucide="trending-up" class="h-6 w-6 md:h-8 md:w-8 text-purple-600"></i>
+                                        <span class="badge bg-purple-500 text-white text-xs">New</span>
+                                    </div>
+                                    <h3 class="font-semibold text-purple-900 text-sm md:text-base">Analytics</h3>
+                                    <p class="text-xs md:text-sm text-purple-700">Usage insights</p>
+                                </div>
+                            </div>
+
+                            <div class="card cursor-pointer hover:shadow-lg transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-orange-50 to-red-50 border-orange-200">
+                                <div class="p-4">
+                                    <div class="flex justify-between items-start mb-3">
+                                        <i data-lucide="award" class="h-6 w-6 md:h-8 md:w-8 text-orange-600"></i>
+                                        <span class="badge bg-orange-500 text-white text-xs">Hot</span>
+                                    </div>
+                                    <h3 class="font-semibold text-orange-900 text-sm md:text-base">Rewards</h3>
+                                    <p class="text-xs md:text-sm text-orange-700">Earn points</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Active Bookings -->
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <div class="space-y-4">
+                                <div class="card">
+                                    <div class="card-header pb-3">
+                                        <div class="flex justify-between items-center">
+                                            <h2 class="text-base md:text-lg font-semibold">Active Bookings</h2>
+                                            <span class="badge bg-green-100 text-green-800">1 Active</span>
+                                        </div>
+                                    </div>
+                                    <div class="p-4 space-y-3">
+                                        <div class="card border-l-4 border-l-green-500">
+                                            <div class="p-4">
+                                                <div class="flex flex-col md:flex-row justify-between items-start mb-3 gap-3">
+                                                    <div class="flex items-center gap-3 flex-1">
+                                                        <div class="p-2 bg-green-100 rounded-lg">
+                                                            <i data-lucide="car" class="h-4 w-4 md:h-5 md:w-5 text-green-600"></i>
+                                                        </div>
+                                                        <div class="flex-1">
+                                                            <h4 class="font-semibold text-sm md:text-base">Phoenix MarketCity</h4>
+                                                            <p class="text-xs md:text-sm text-gray-600">Level 2 - Premium A15</p>
+                                                            <p class="text-xs text-gray-500">Today at 2:30 PM</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="text-right">
+                                                        <div class="text-lg font-bold text-green-600">₹105</div>
+                                                        <div class="text-sm text-gray-500">3h</div>
+                                                    </div>
+                                                </div>
+                                                <div class="flex flex-col md:flex-row gap-2">
+                                                    <button class="btn btn-primary flex-1">
+                                                        <i data-lucide="navigation" class="h-4 w-4 mr-2"></i>
+                                                        Navigate
+                                                    </button>
+                                                    <button class="btn btn-outline flex-1">
+                                                        <i data-lucide="qr-code" class="h-4 w-4 mr-2"></i>
+                                                        QR Code
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Smart Insights -->
+                                <div class="card bg-gradient-to-r from-amber-50 to-orange-50 border-amber-200">
+                                    <div class="p-4">
+                                        <div class="flex items-center gap-3 mb-3">
+                                            <div class="p-2 bg-amber-100 rounded-lg">
+                                                <i data-lucide="zap" class="h-4 w-4 md:h-5 md:w-5 text-amber-600"></i>
+                                            </div>
+                                            <div>
+                                                <h4 class="font-semibold text-amber-900 text-sm md:text-base">Smart Insight</h4>
+                                                <p class="text-xs md:text-sm text-amber-700">Peak hours: 2-4 PM today</p>
+                                            </div>
+                                        </div>
+                                        <div class="bg-white/50 rounded-lg p-3">
+                                            <p class="text-xs md:text-sm text-amber-800">
+                                                💡 Book your next slot before 1:30 PM to save 20% during peak hours
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Recent Activity -->
+                            <div class="space-y-4">
+                                <div class="card">
+                                    <div class="card-header pb-3">
+                                        <h2 class="text-base md:text-lg font-semibold">Recent Activity</h2>
+                                    </div>
+                                    <div class="p-4 space-y-3">
+                                        <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                                            <div class="p-2 bg-blue-100 rounded-lg">
+                                                <i data-lucide="car" class="h-4 w-4 text-blue-600"></i>
+                                            </div>
+                                            <div class="flex-1">
+                                                <p class="text-sm font-medium">Booking completed</p>
+                                                <p class="text-xs text-gray-500">Express Avenue • 2 hours ago</p>
+                                            </div>
+                                            <span class="badge bg-green-100 text-green-800">₹70</span>
+                                        </div>
+                                        <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                                            <div class="p-2 bg-purple-100 rounded-lg">
+                                                <i data-lucide="award" class="h-4 w-4 text-purple-600"></i>
+                                            </div>
+                                            <div class="flex-1">
+                                                <p class="text-sm font-medium">Achievement unlocked</p>
+                                                <p class="text-xs text-gray-500">Smart Parker badge earned</p>
+                                            </div>
+                                            <span class="badge bg-purple-100 text-purple-800">New</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Map View -->
+                <div id="map-view" class="tab-content hidden">
+                    <div class="space-y-4">
+                        <!-- Search and Filter -->
+                        <div class="flex flex-col md:flex-row gap-4">
+                            <div class="flex-1 relative">
+                                <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4"></i>
+                                <input type="text" id="search-input" placeholder="Search parking locations..." class="input pl-10">
+                            </div>
+                            <div class="flex gap-2">
+                                <button class="btn btn-outline shrink-0">
+                                    <i data-lucide="filter" class="h-4 w-4"></i>
+                                </button>
+                                <button class="btn btn-outline shrink-0">Sort by Distance</button>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            <!-- Interactive Map -->
+                            <div class="lg:col-span-2">
+                                <div class="card overflow-hidden">
+                                    <div class="h-64 md:h-80 lg:h-96 bg-gradient-to-br from-blue-100 to-indigo-100 relative flex items-center justify-center">
+                                        <div class="text-center">
+                                            <i data-lucide="map-pin" class="h-12 w-12 md:h-16 md:w-16 text-blue-600 mx-auto mb-4"></i>
+                                            <h3 class="text-lg md:text-xl font-semibold text-blue-900 mb-2">Interactive Map</h3>
+                                            <p class="text-blue-700 text-sm md:text-base">Real-time parking availability</p>
+                                        </div>
+
+                                        <!-- Mock location markers -->
+                                        <div class="absolute top-4 left-4 bg-green-500 text-white px-2 md:px-3 py-1 rounded-full text-xs md:text-sm font-semibold">
+                                            24 Available
+                                        </div>
+                                        <div class="absolute top-12 right-6 bg-amber-500 text-white px-2 md:px-3 py-1 rounded-full text-xs md:text-sm font-semibold">
+                                            18 Available
+                                        </div>
+                                        <div class="absolute bottom-8 left-12 bg-red-500 text-white px-2 md:px-3 py-1 rounded-full text-xs md:text-sm font-semibold">
+                                            Full
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Quick Stats -->
+                            <div class="space-y-4">
+                                <div class="card">
+                                    <div class="card-header pb-3">
+                                        <h3 class="text-base font-semibold">Nearby Stats</h3>
+                                    </div>
+                                    <div class="p-4 space-y-3">
+                                        <div class="flex justify-between items-center">
+                                            <span class="text-sm">Available Spots</span>
+                                            <span class="font-semibold text-green-600">74</span>
+                                        </div>
+                                        <div class="w-full bg-gray-200 rounded-full h-2">
+                                            <div class="bg-green-500 h-2 rounded-full" style="width: 80%"></div>
+                                        </div>
+
+                                        <div class="flex justify-between items-center">
+                                            <span class="text-sm">Average Price</span>
+                                            <span class="font-semibold">₹35/hr</span>
+                                        </div>
+                                        <div class="w-full bg-gray-200 rounded-full h-2">
+                                            <div class="bg-blue-500 h-2 rounded-full" style="width: 60%"></div>
+                                        </div>
+
+                                        <div class="flex justify-between items-center">
+                                            <span class="text-sm">Best Deal</span>
+                                            <span class="font-semibold text-blue-600">₹25/hr</span>
+                                        </div>
+                                        <div class="w-full bg-gray-200 rounded-full h-2">
+                                            <div class="bg-purple-500 h-2 rounded-full" style="width: 90%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card bg-gradient-to-br from-green-50 to-emerald-50 border-green-200">
+                                    <div class="p-4">
+                                        <div class="text-center">
+                                            <div class="text-2xl font-bold text-green-600 mb-1">15%</div>
+                                            <div class="text-sm text-green-700">Average Savings</div>
+                                            <div class="text-xs text-green-600 mt-1">with smart booking</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Parking Spots List -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4" id="parking-spots-container">
+                            <!-- Spots will be dynamically generated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Booking View -->
+                <div id="booking-view" class="tab-content hidden">
+                    <div class="max-w-4xl mx-auto">
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h2 class="text-lg md:text-xl font-semibold">Smart Booking</h2>
+                                </div>
+                                <div class="p-4 space-y-4">
+                                    <!-- Selected Location -->
+                                    <div>
+                                        <label class="block text-sm font-medium mb-2">Selected Location</label>
+                                        <div class="card bg-blue-50 border-blue-200">
+                                            <div class="p-4">
+                                                <h4 class="font-semibold text-blue-900">Phoenix MarketCity</h4>
+                                                <p class="text-sm text-blue-700">Velachery Main Road, Chennai</p>
+                                                <div class="flex justify-between items-center mt-2">
+                                                    <span class="text-lg font-bold text-blue-600">₹30/hour</span>
+                                                    <span class="badge bg-green-500 text-white">24 spots available</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Date and Time -->
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-sm font-medium mb-2">Date</label>
+                                            <input type="date" class="input" id="booking-date">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium mb-2">Time</label>
+                                            <input type="time" class="input" id="booking-time">
+                                        </div>
+                                    </div>
+
+                                    <!-- Duration Selection -->
+                                    <div>
+                                        <label class="block text-sm font-medium mb-2">Duration</label>
+                                        <div class="grid grid-cols-5 gap-2" id="duration-buttons">
+                                            <button class="duration-btn active" data-duration="1">1h</button>
+                                            <button class="duration-btn" data-duration="2">2h</button>
+                                            <button class="duration-btn" data-duration="3">3h</button>
+                                            <button class="duration-btn" data-duration="4">4h</button>
+                                            <button class="duration-btn" data-duration="8">8h</button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Vehicle Selection -->
+                                    <div>
+                                        <label class="block text-sm font-medium mb-2">Vehicle</label>
+                                        <div class="card cursor-pointer border-2 border-blue-200 bg-blue-50">
+                                            <div class="p-4 flex items-center gap-3">
+                                                <i data-lucide="car" class="h-5 w-5 text-blue-600"></i>
+                                                <div>
+                                                    <div class="font-medium">TN-01-AB-1234</div>
+                                                    <div class="text-sm text-gray-600">Honda City • White</div>
+                                                </div>
+                                                <span class="badge ml-auto bg-blue-500 text-white">Default</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="space-y-6">
+                                <!-- Price Breakdown -->
+                                <div class="card bg-gray-50">
+                                    <div class="card-header">
+                                        <h3 class="text-lg font-semibold">Price Breakdown</h3>
+                                    </div>
+                                    <div class="p-4 space-y-3" id="price-breakdown">
+                                        <div class="flex justify-between">
+                                            <span>Base Price (1h)</span>
+                                            <span>₹30</span>
+                                        </div>
+                                        <div class="flex justify-between text-green-600">
+                                            <span>Smart Discount (15%)</span>
+                                            <span>-₹5</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span>Service Fee</span>
+                                            <span>₹5</span>
+                                        </div>
+                                        <div class="flex justify-between text-blue-600">
+                                            <span>Premium Member Discount</span>
+                                            <span>-₹3</span>
+                                        </div>
+                                        <hr>
+                                        <div class="flex justify-between font-bold text-lg">
+                                            <span>Total</span>
+                                            <span id="total-price">₹27</span>
+                                        </div>
+                                        <div class="text-sm text-green-600 text-center">
+                                            💰 You save ₹8 with smart booking!
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Payment Method -->
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h3 class="text-lg font-semibold">Payment Method</h3>
+                                    </div>
+                                    <div class="p-4 space-y-3">
+                                        <div class="card cursor-pointer border-2 border-blue-200 bg-blue-50">
+                                            <div class="p-4 flex items-center gap-3">
+                                                <i data-lucide="credit-card" class="h-5 w-5 text-blue-600"></i>
+                                                <div>
+                                                    <div class="font-medium">•••• •••• •••• 1234</div>
+                                                    <div class="text-sm text-gray-600">Expires 12/26</div>
+                                                </div>
+                                                <span class="badge ml-auto bg-blue-500 text-white">Default</span>
+                                            </div>
+                                        </div>
+                                        <button class="btn btn-outline w-full">
+                                            + Add New Payment Method
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <button class="btn btn-primary w-full h-12 text-lg" id="complete-booking-btn">
+                                    Complete Booking - ₹27
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile View -->
+                <div id="profile-view" class="tab-content hidden">
+                    <div class="max-w-4xl mx-auto space-y-6">
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            <!-- Profile Header -->
+                            <div class="lg:col-span-2">
+                                <div class="card bg-gradient-to-br from-purple-600 to-blue-600 text-white">
+                                    <div class="p-6">
+                                        <div class="flex flex-col md:flex-row items-start md:items-center gap-4 mb-4">
+                                            <div class="w-16 h-16 md:w-20 md:h-20 rounded-full bg-white/20 flex items-center justify-center text-white font-bold text-xl">
+                                                RK
+                                            </div>
+                                            <div class="flex-1">
+                                                <h2 class="text-xl md:text-2xl font-bold">Rajesh Kumar</h2>
+                                                <p class="text-purple-100">Premium Member</p>
+                                                <p class="text-purple-200 text-sm">Member since Jan 2024</p>
+                                                <div class="flex gap-2 mt-2">
+                                                    <span class="badge bg-yellow-500 text-white">Gold Status</span>
+                                                    <span class="badge bg-green-500 text-white">Eco Friendly</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="grid grid-cols-3 gap-4 pt-4 border-t border-white/20">
+                                            <div class="text-center">
+                                                <div class="text-xl md:text-2xl font-bold">32</div>
+                                                <div class="text-xs text-purple-100">Total Bookings</div>
+                                            </div>
+                                            <div class="text-center">
+                                                <div class="text-xl md:text-2xl font-bold">₹2,450</div>
+                                                <div class="text-xs text-purple-100">Total Spent</div>
+                                            </div>
+                                            <div class="text-center">
+                                                <div class="text-xl md:text-2xl font-bold flex items-center justify-center gap-1">
+                                                    4.9 <i data-lucide="star" class="h-4 w-4 fill-yellow-400 text-yellow-400"></i>
+                                                </div>
+                                                <div class="text-xs text-purple-100">Your Rating</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Quick Actions -->
+                            <div class="space-y-4">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h3 class="text-lg font-semibold">Quick Actions</h3>
+                                    </div>
+                                    <div class="p-4 space-y-2">
+                                        <button class="btn btn-outline w-full justify-start">
+                                            <i data-lucide="car" class="h-4 w-4 mr-2"></i>
+                                            Manage Vehicles
+                                        </button>
+                                        <button class="btn btn-outline w-full justify-start">
+                                            <i data-lucide="credit-card" class="h-4 w-4 mr-2"></i>
+                                            Payment Methods
+                                        </button>
+                                        <button class="btn btn-outline w-full justify-start">
+                                            <i data-lucide="bell" class="h-4 w-4 mr-2"></i>
+                                            Notifications
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <!-- Achievements -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="flex items-center gap-2 text-lg font-semibold">
+                                        <i data-lucide="award" class="h-5 w-5"></i>
+                                        Achievements
+                                    </h3>
+                                </div>
+                                <div class="p-4">
+                                    <div class="space-y-4">
+                                        <div class="text-center p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+                                            <div class="text-2xl mb-2">🏆</div>
+                                            <div class="font-semibold text-yellow-800">Eco Warrior</div>
+                                            <div class="text-xs text-yellow-600">Used EV charging 10+ times</div>
+                                        </div>
+                                        <div class="text-center p-4 bg-blue-50 rounded-lg border border-blue-200">
+                                            <div class="text-2xl mb-2">⭐</div>
+                                            <div class="font-semibold text-blue-800">Smart Parker</div>
+                                            <div class="text-xs text-blue-600">Saved ₹500+ with smart booking</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Monthly Stats -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="flex items-center gap-2 text-lg font-semibold">
+                                        <i data-lucide="trending-up" class="h-5 w-5"></i>
+                                        This Month
+                                    </h3>
+                                </div>
+                                <div class="p-4 space-y-4">
+                                    <div class="space-y-2">
+                                        <div class="flex justify-between items-center">
+                                            <span class="text-sm">Bookings</span>
+                                            <span class="font-semibold">8 bookings</span>
+                                        </div>
+                                        <div class="w-full bg-gray-200 rounded-full h-2">
+                                            <div class="bg-blue-500 h-2 rounded-full" style="width: 80%"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="space-y-2">
+                                        <div class="flex justify-between items-center">
+                                            <span class="text-sm">Money Saved</span>
+                                            <span class="font-semibold text-green-600">₹125</span>
+                                        </div>
+                                        <div class="w-full bg-gray-200 rounded-full h-2">
+                                            <div class="bg-green-500 h-2 rounded-full" style="width: 60%"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="space-y-2">
+                                        <div class="flex justify-between items-center">
+                                            <span class="text-sm">Carbon Footprint</span>
+                                            <span class="font-semibold text-blue-600">-15kg CO₂</span>
+                                        </div>
+                                        <div class="w-full bg-gray-200 rounded-full h-2">
+                                            <div class="bg-purple-500 h-2 rounded-full" style="width: 90%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Loyalty Points -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="flex items-center gap-2 text-lg font-semibold">
+                                        <i data-lucide="star" class="h-5 w-5"></i>
+                                        Loyalty Points
+                                    </h3>
+                                </div>
+                                <div class="p-4">
+                                    <div class="text-center space-y-4">
+                                        <div>
+                                            <div class="text-3xl font-bold text-purple-600">2,450</div>
+                                            <div class="text-sm text-gray-600">Available Points</div>
+                                        </div>
+                                        <div class="w-full bg-gray-200 rounded-full h-3">
+                                            <div class="bg-purple-500 h-3 rounded-full" style="width: 75%"></div>
+                                        </div>
+                                        <div class="text-xs text-gray-500">550 more points to reach Platinum status</div>
+                                        <button class="btn btn-outline w-full">
+                                            Redeem Points
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobile Bottom Navigation -->
+            <div class="lg:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-t border-gray-200">
+                <div class="grid grid-cols-4 h-16">
+                    <button class="mobile-nav-btn flex flex-col gap-1 h-full items-center justify-center transition-colors" data-tab="dashboard">
+                        <i data-lucide="home" class="h-4 w-4"></i>
+                        <span class="text-xs">Home</span>
+                    </button>
+                    <button class="mobile-nav-btn flex flex-col gap-1 h-full items-center justify-center transition-colors" data-tab="map">
+                        <i data-lucide="map-pin" class="h-4 w-4"></i>
+                        <span class="text-xs">Map</span>
+                    </button>
+                    <button class="mobile-nav-btn flex flex-col gap-1 h-full items-center justify-center transition-colors" data-tab="booking">
+                        <i data-lucide="calendar" class="h-4 w-4"></i>
+                        <span class="text-xs">Book</span>
+                    </button>
+                    <button class="mobile-nav-btn flex flex-col gap-1 h-full items-center justify-center transition-colors" data-tab="profile">
+                        <i data-lucide="user" class="h-4 w-4"></i>
+                        <span class="text-xs">Profile</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="success-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center">
+        <div class="bg-white m-4 p-6 rounded-2xl text-center max-w-sm w-full">
+            <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i data-lucide="check" class="h-8 w-8 text-green-600"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-2">Booking Confirmed!</h3>
+            <p class="text-gray-600 mb-4">Your parking spot has been reserved successfully. You'll receive a confirmation via SMS and email.</p>
+            <button class="btn btn-primary w-full" onclick="closeModal()">
+                Great! Thanks
+            </button>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-white border border-gray-200 rounded-lg shadow-lg p-4 z-50 hidden">
+        <div class="flex items-center gap-3">
+            <div id="toast-icon" class="text-green-500">
+                <i data-lucide="check-circle" class="h-5 w-5"></i>
+            </div>
+            <div>
+                <div id="toast-title" class="font-semibold">Success!</div>
+                <div id="toast-message" class="text-sm text-gray-600">Action completed successfully</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
